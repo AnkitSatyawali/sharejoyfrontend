@@ -1,0 +1,6 @@
+Files info
+LoginScreen:This is the login screen
+SignUpScreen:This is signup
+createvent:screen to choose create event
+homescreen:screen with 3 tabs
+FormNewEvent:Create new event form
