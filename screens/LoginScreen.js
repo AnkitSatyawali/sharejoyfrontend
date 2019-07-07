@@ -1,4 +1,3 @@
-
 import React from 'react';
 //import {Toast, Container, Button, Content, Text, Input, Form, Item} from "native-base";
 import axios from 'axios';
@@ -30,7 +29,7 @@ export default class LoginScreen extends React.Component{
           email: '',
           error: '',
 
-
+          id:'',
           showPass: true,
   		  press: false,
   		  switchvalue: false,
@@ -141,13 +140,29 @@ export default class LoginScreen extends React.Component{
       })
 
       if (result.type === "success") {
+        console.log(result.user);
         <ActivityIndicator size="large" color="blue" />
         this.setState({
           signedIn: true,
           name: result.user.name,
+          id:result.user.id,
+          email:result.user.email,
           photoUrl: result.user.photoUrl
         })
-        await AsyncStorage.setItem('isLoggedIn','1');
+        const baseURL = 'http://192.168.43.136:3000/users/gmail/signin';
+          const response = await axios.post(baseURL, {
+                    // email: this.state.email,
+                username:this.state.name,
+                photoUrl: this.state.photoUrl,
+                id:this.state.id,
+                email:this.state.email
+          }, {
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
+          console.log(response);
+       /* await AsyncStorage.setItem('isLoggedIn','1');*/
         await AsyncStorage.setItem('value',this.state.name);
         await AsyncStorage.setItem('photo',this.state.photoUrl);
         this.props.navigation.navigate('HomeScreen',{text:this.state.name,photoUrl:this.state.photoUrl})
@@ -172,6 +187,16 @@ export default class LoginScreen extends React.Component{
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,birthday,picture.type(large)`);
         const FacebookInfo = await response.json();
         this.setState({FacebookInfo});
+         const baseURL = 'http://192.168.43.136:3000/users/gmail/signin';
+          const response = await axios.post(baseURL, {
+                    // email: this.state.email,
+                username:this.state.FacebookInfo.name,
+                photoUrl: this.state.FacebookInfo.picture.data.url,
+          }, {
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
         //Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         Alert.alert('Logged in!', `Hi ${this.state.FacebookInfo.name}!`);
         await AsyncStorage.setItem('isLoggedIn','1');
@@ -305,11 +330,6 @@ export default class LoginScreen extends React.Component{
 
     
 
-        {this.state.signedIn ? (
-          <LoggedInPage name={this.state.name} photoUrl={this.state.photoUrl} />
-        ) : (
-            console.log("do nothing")
-          )}
 
       </ImageBackground>
         );
