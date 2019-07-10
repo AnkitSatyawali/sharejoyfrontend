@@ -161,11 +161,11 @@ export default class LoginScreen extends React.Component{
                   'Content-Type': 'application/json'
               }
           });
-          console.log(response);
+          console.log(response.data);
        /* await AsyncStorage.setItem('isLoggedIn','1');*/
         await AsyncStorage.setItem('value',this.state.name);
         await AsyncStorage.setItem('photo',this.state.photoUrl);
-        this.props.navigation.navigate('HomeScreen',{text:this.state.name,photoUrl:this.state.photoUrl})
+        this.props.navigation.navigate('HomeScreen',{text:this.state.name,photoUrl:this.state.photoUrl,id:response.data.id})
       } else {
         console.log("cancelled")
       }
@@ -188,7 +188,7 @@ export default class LoginScreen extends React.Component{
         const FacebookInfo = await response.json();
         this.setState({FacebookInfo});
          const baseURL = 'http://192.168.43.136:3000/users/gmail/signin';
-          const response = await axios.post(baseURL, {
+          const responses = await axios.post(baseURL, {
                     // email: this.state.email,
                 username:this.state.FacebookInfo.name,
                 photoUrl: this.state.FacebookInfo.picture.data.url,

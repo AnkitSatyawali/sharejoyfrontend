@@ -21,6 +21,7 @@ export default class App extends React.Component {
    global.SampleVar = loginData;
    global.ID = loginId;
    global.PhotoVar=photoData;
+   console.log(global.ID);
    axios.get('http://192.168.43.136:3000/users/'+global.ID,{
             headers: {
                 'Content-Type': 'application/json'
